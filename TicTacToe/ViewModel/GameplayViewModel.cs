@@ -50,7 +50,7 @@ namespace TicTacToe.ViewModel
         private bool OnCanCellPressed(string point)
         {
             var gamePoint = GamePoint.Parse(point);
-			return !_gameOver && _game.CanMove(gamePoint);
+            return !_gameOver && _game.CanMove(gamePoint);
         }
         private void OnCellPressed(string point)
         {
@@ -64,7 +64,7 @@ namespace TicTacToe.ViewModel
                     GetCell(linePoint.Point).IsWinner = true;
                 var winner = winnerLine[0].MoveType;
                 _dialogService.Show(string.Format("{0} WIN!", winner));
-				_gameOver = true;
+		_gameOver = true;
             }
         }
         private void OnExit()
@@ -74,7 +74,7 @@ namespace TicTacToe.ViewModel
         private void OnRetry()
         {
             _game = new Game(new GameBoard(BorderSize), new BoardAI());
-			_gameOver = false;
+	    _gameOver = false;
             IsCurrentX = true;
             Cells = new ObservableCollection<CellViewModel>(
                 Enumerable.Range(0, ElementsOnBorderCount)
