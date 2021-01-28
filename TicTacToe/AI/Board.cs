@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace TicTacToe.AI
 {
-    public interface IGameBoard
+    public interface IGameBoard : ISnapshotable
     {
         int Size { get; }
         MoveType? this[int row, int column] { get; set; }
@@ -42,6 +42,22 @@ namespace TicTacToe.AI
         public int Size
         {
             get { return _cells.GetLength(0); }
+        }
+        public ISnapshot Save()
+        {
+            return new BoardSnapshot(_cells);
+        }
+        public void Restore(ISnapshot s)
+        {
+            BoardSnapshot snapshot = (BoardSnapshot)s;
+            
+            for (int i = 0; i < Size; i++) 
+            {
+                for (int j = 0; j < Size; j++) 
+                {
+                    _cells[i, j] = snapshot.Cells[i, j];
+                }
+            }    
         }
     }
 }

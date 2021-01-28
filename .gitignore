@@ -5,3 +5,4 @@
 *.exe
 /.vs
 /TicTacToe/bin/Debug
+*.dll

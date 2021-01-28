@@ -161,11 +161,10 @@
                 </Grid>
             </Viewbox>
         </Grid>
-        <ListView Margin="10" Grid.Column="1" Name="lvGameHistory">
+        <ListView Margin="10" Grid.Column="1" Name="lvSnapshots" ItemsSource="{Binding Snapshots}" SelectedItem="{Binding SelectedSnapshot, Mode=TwoWay}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Id" Width="30"  />
-                    <GridViewColumn Header="TimeStamp" Width="100"  />
+                    <GridViewColumn Header="TimeStamp" DisplayMemberBinding="{Binding TimeStamp}"  />
                 </GridView>
             </ListView.View>
         </ListView>

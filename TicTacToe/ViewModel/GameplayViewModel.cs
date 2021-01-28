@@ -42,10 +42,18 @@ namespace TicTacToe.ViewModel
         private const int ElementsOnBorderCount = BorderSize*BorderSize;
 
         private readonly IDialogService _dialogService;
-        private bool _isCurrentX;
         private bool _gameOver;
         private ObservableCollection<CellViewModel> _cells;
         private Game _game;
+
+        private ObservableCollection<ISnapshot> _snapshots;
+
+        private ISnapshot _selectedSnapshot;
+        public ISnapshot SelectedSnapshot
+        {
+            get { return this._selectedSnapshot; }
+            set { SetProperty(ref _selectedSnapshot, value); }
+        }
 
         private bool OnCanCellPressed(string point)
         {
@@ -55,8 +63,7 @@ namespace TicTacToe.ViewModel
         private void OnCellPressed(string point)
         {
             var gamePoint = GamePoint.Parse(point);
-            Move(gamePoint, _isCurrentX ? MoveType.X : MoveType.O);
-            IsCurrentX = !IsCurrentX;
+            Move(gamePoint);
             var winnerLine = _game.WinnerLine();
             if (winnerLine != null && winnerLine.Length > 0)
             {
@@ -73,18 +80,32 @@ namespace TicTacToe.ViewModel
         }
         private void OnRetry()
         {
-            _game = new Game(new GameBoard(BorderSize), new BoardAI());
+            _game = new Game(new GameBoard(BorderSize), new BoardAI(), MoveType.X);
 	        _gameOver = false;
-            IsCurrentX = true;
             Cells = new ObservableCollection<CellViewModel>(
                 Enumerable.Range(0, ElementsOnBorderCount)
                           .Select(i => new CellViewModel(new RelayCommand<string>(OnCellPressed, OnCanCellPressed))));
+
+            Snapshots = new ObservableCollection<ISnapshot>();
         }
 
-        private void Move(GamePoint point, MoveType moveType)
+        private void Move(GamePoint point)
         {
-            _game.Move(point, moveType);
-            GetCell(point).MoveTypeOnCell = moveType;
+            _game.Move(point);
+            Redraw();
+            Snapshots.Add(_game.Save());
+        }
+        private void Redraw()
+        {
+            for (int i = 0; i < _game.BoardSize; i++)
+            {
+                for (int j = 0; j < _game.BoardSize; j++)
+                {
+                    GamePoint p = new GamePoint(i, j);
+                    GetCell(p).MoveTypeOnCell = _game.Get(p);
+                }
+            }
+            OnPropertyChanged(nameof(IsCurrentX));
         }
         private CellViewModel GetCell(GamePoint point)
         {
@@ -96,18 +117,43 @@ namespace TicTacToe.ViewModel
             _dialogService = dialogService;
             RetryCommand = new RelayCommand(OnRetry);
             ExitCommand =  new RelayCommand(OnExit);
+
+            this.PropertyChanged += MyPropertyChanged;
+
             OnRetry();
+        }
+
+        private void MyPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(SelectedSnapshot):
+                    {
+                        RestoreSnapshot(SelectedSnapshot);
+                        break;
+                    }
+            }
         }
 
         public bool IsCurrentX
         {
-            get { return _isCurrentX; }
-            set { SetProperty(ref _isCurrentX, value); }
+            get { return _game.CurrentMove == MoveType.X; }
         }
         public ObservableCollection<CellViewModel> Cells
         {
             get { return _cells; }
             set { SetProperty(ref _cells, value); }
+        }
+        public ObservableCollection<ISnapshot> Snapshots
+        {
+            get { return _snapshots; }
+            set { SetProperty(ref _snapshots, value); }
+        }
+        private void RestoreSnapshot(ISnapshot snapshot)
+        {
+            if (snapshot == null) return;
+            _game.Restore(snapshot);
+            Redraw();
         }
 
         public RelayCommand RetryCommand { get; private set; }
