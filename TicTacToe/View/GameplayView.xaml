@@ -6,9 +6,9 @@
     xmlns:convertors="clr-namespace:TicTacToe.Convertors"
     Title="TickTacToe"
     Height="568" 
-    Width="320"
+    Width="640"
     MinHeight="473" 
-    MinWidth="267">
+    MinWidth="640">
 
     <Window.Resources>
         <convertors:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -31,8 +31,13 @@
     </Window.Resources>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid 
-            Margin="10,20,10,20">
+            Margin="10,20,10,20"
+            Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -63,14 +68,14 @@
                     HorizontalAlignment="Left"
                     Width="75"
                     Height="75"
-                    Source="/;component/Resources/x.png"
+                    Source="/Resources/x.png"
                     Visibility="{Binding IsCurrentX, Converter={StaticResource BoolToVisibilityConverter}}">
                 </Image>
                 <Image
                     HorizontalAlignment="Right"
                     Width="75"
                     Height="75"
-                    Source="/;component/Resources/o.png"
+                    Source="/Resources/o.png"
                     Visibility="{Binding IsCurrentX, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=not}">
                 </Image>
             </StackPanel>
@@ -156,5 +161,13 @@
                 </Grid>
             </Viewbox>
         </Grid>
+        <ListView Margin="10" Grid.Column="1" Name="lvGameHistory">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" Width="30"  />
+                    <GridViewColumn Header="TimeStamp" Width="100"  />
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
