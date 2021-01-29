@@ -1,6 +1,6 @@
 namespace TicTacToe.AI
 {
-    public class Game 
+    public class Game : ISnapshotable 
     {
         private readonly IGameBoard _gameBoard;
         private readonly IBoardAI _analyzer;
@@ -46,6 +46,21 @@ namespace TicTacToe.AI
         public GameLinePoint[] WinnerLine()
         {
             return _analyzer.CheckWinnerLine(_gameBoard);
+        }
+
+        public ISnapshot Save()
+        {
+            ISnapshot boardSnapshot = _gameBoard.Save();
+
+            return new GameSnapshot(this.CurrentMove, boardSnapshot);
+        }
+
+        public void Restore(ISnapshot s)
+        {
+            GameSnapshot snapshot = (GameSnapshot)s;
+
+            this._currentMove = snapshot.CurrentMove;
+            this._gameBoard.Restore(snapshot.BoardSnapshot);
         }
 
         public int BoardSize

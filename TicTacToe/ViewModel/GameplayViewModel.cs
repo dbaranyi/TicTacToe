@@ -95,6 +95,7 @@ namespace TicTacToe.ViewModel
         {
             _game.Move(point);
             Redraw();
+            HistoryCollection.Add(_game.Save());
         }
         private void Redraw()
         {
@@ -152,7 +153,11 @@ namespace TicTacToe.ViewModel
         }
         private void HistorySelected(Object history)
         {
-        
+            ISnapshot snapshot = history as ISnapshot;
+            if (snapshot == null) return;
+
+            _game.Restore(snapshot);
+            Redraw();
         }
 
         public RelayCommand RetryCommand { get; private set; }

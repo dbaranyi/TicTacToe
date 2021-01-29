@@ -59,11 +59,16 @@
     <Compile Include="AI\BoardAI.cs" />
     <Compile Include="AI\Game.cs" />
     <Compile Include="AI\Models.cs" />
+    <Compile Include="AI\BoardSnapshot.cs" />
     <Compile Include="Convertors\BooleanNegationConverter.cs" />
     <Compile Include="Convertors\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="AI\GameSnapshot.cs" />
+    <Compile Include="ISnapshot.cs" />
+    <Compile Include="ISnapshotable.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="SnapshotBase.cs" />
     <Compile Include="ViewModel\GameplayViewModel.cs" />
     <Compile Include="Common\RelayCommands.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
