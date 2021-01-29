@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using TicTacToe.AI;
@@ -46,13 +47,13 @@ namespace TicTacToe.ViewModel
         private ObservableCollection<CellViewModel> _cells;
         private Game _game;
 
-        private ObservableCollection<ISnapshot> _snapshots;
+        private ObservableCollection<Object> _historyCollection;
 
-        private ISnapshot _selectedSnapshot;
-        public ISnapshot SelectedSnapshot
+        private Object _selectedHistory;
+        public Object SelectedHistory
         {
-            get { return this._selectedSnapshot; }
-            set { SetProperty(ref _selectedSnapshot, value); }
+            get { return this._selectedHistory; }
+            set { SetProperty(ref _selectedHistory, value); }
         }
 
         private bool OnCanCellPressed(string point)
@@ -86,14 +87,14 @@ namespace TicTacToe.ViewModel
                 Enumerable.Range(0, ElementsOnBorderCount)
                           .Select(i => new CellViewModel(new RelayCommand<string>(OnCellPressed, OnCanCellPressed))));
 
-            Snapshots = new ObservableCollection<ISnapshot>();
+            HistoryCollection = new ObservableCollection<Object>();
+            Redraw();
         }
 
         private void Move(GamePoint point)
         {
             _game.Move(point);
             Redraw();
-            Snapshots.Add(_game.Save());
         }
         private void Redraw()
         {
@@ -127,9 +128,9 @@ namespace TicTacToe.ViewModel
         {
             switch (e.PropertyName)
             {
-                case nameof(SelectedSnapshot):
+                case nameof(SelectedHistory):
                     {
-                        RestoreSnapshot(SelectedSnapshot);
+                        HistorySelected(SelectedHistory);
                         break;
                     }
             }
@@ -144,16 +145,14 @@ namespace TicTacToe.ViewModel
             get { return _cells; }
             set { SetProperty(ref _cells, value); }
         }
-        public ObservableCollection<ISnapshot> Snapshots
+        public ObservableCollection<Object>HistoryCollection
         {
-            get { return _snapshots; }
-            set { SetProperty(ref _snapshots, value); }
+            get { return _historyCollection; }
+            set { SetProperty(ref _historyCollection, value); }
         }
-        private void RestoreSnapshot(ISnapshot snapshot)
+        private void HistorySelected(Object history)
         {
-            if (snapshot == null) return;
-            _game.Restore(snapshot);
-            Redraw();
+        
         }
 
         public RelayCommand RetryCommand { get; private set; }

@@ -161,7 +161,7 @@
                 </Grid>
             </Viewbox>
         </Grid>
-        <ListView Margin="10" Grid.Column="1" Name="lvSnapshots" ItemsSource="{Binding Snapshots}" SelectedItem="{Binding SelectedSnapshot, Mode=TwoWay}">
+        <ListView Margin="10" Grid.Column="1" Name="lvHistory" ItemsSource="{Binding HistoryCollection}" SelectedItem="{Binding SelectedHistory, Mode=TwoWay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="TimeStamp" DisplayMemberBinding="{Binding TimeStamp}"  />

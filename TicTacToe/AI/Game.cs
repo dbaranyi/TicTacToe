@@ -1,6 +1,6 @@
 namespace TicTacToe.AI
 {
-    public class Game : ISnapshotable
+    public class Game 
     {
         private readonly IGameBoard _gameBoard;
         private readonly IBoardAI _analyzer;
@@ -56,20 +56,6 @@ namespace TicTacToe.AI
         public MoveType CurrentMove
         {
             get { return _currentMove; }
-        }
-
-        public ISnapshot Save()
-        {
-            ISnapshot boardSnapshot = _gameBoard.Save();
-
-            return new GameSnapshot(this.BoardSize, this.CurrentMove, boardSnapshot);
-        }
-        public void Restore(ISnapshot s)
-        {
-            GameSnapshot snapshot = (GameSnapshot)s;
-            
-            this._currentMove = snapshot.CurrentMove;
-            this._gameBoard.Restore(snapshot.BoardSnapshot);
         }
     }
 }
