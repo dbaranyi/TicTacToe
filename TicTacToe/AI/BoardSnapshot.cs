@@ -12,7 +12,7 @@ namespace TicTacToe.AI
 
         public BoardSnapshot(MoveType?[,] cells) : base()
         {
-            this.Cells = (MoveType?[,])cells.Clone();
+            this.Cells = cells;
         }
     }
 }

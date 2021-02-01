@@ -36,7 +36,8 @@ namespace TicTacToe.AI
 
         public ISnapshot Save()
         {
-            return new BoardSnapshot(_cells);
+            MoveType?[,] cells = (MoveType?[,])_cells.Clone();
+            return new BoardSnapshot(cells);
         }
 
         public void Restore(ISnapshot s)
